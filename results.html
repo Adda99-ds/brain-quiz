@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Quiz Results{% endblock %}
+
+{% block content %}
+<h1>🎉 Quiz Complete!</h1>
+
+<div class="score-display">
+    Your Score: {{ score }}%
+</div>
+
+<div class="stats">
+    <div class="stat-card">
+        <div class="stat-number">{{ correct_answers }}</div>
+        <div class="stat-label">Correct</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">{{ wrong_answers }}</div>
+        <div class="stat-label">Wrong</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">{{ total_questions }}</div>
+        <div class="stat-label">Total</div>
+    </div>
+</div>
+
+{% if score >= 80 %}
+    <div class="alert alert-success">
+        <strong>Excellent!</strong> You have mastered this topic! ⭐
+    </div>
+{% elif score >= 60 %}
+    <div class="alert alert-success">
+        <strong>Good job!</strong> You have a solid understanding! 👍
+    </div>
+{% else %}
+    <div class="alert alert-danger">
+        <strong>Keep practicing!</strong> Review the topics and try again! 📚
+    </div>
+{% endif %}
+
+<!-- Chart Visualization Section -->
+{% if chart_data %}
+<div class="chart-container">
+    <div class="chart-title">📊 Visual Results Analysis</div>
+    <img src="data:image/png;base64,{{ chart_data }}" class="chart-image" alt="Quiz Results Charts">
+    <p style="margin-top: 15px; color: gray; font-style: italic;">
+        The pie chart shows the distribution of your answers, while the bar chart provides a numerical summary.
+    </p>
+</div>
+{% endif %}
+
+<h2>Review Your Answers:</h2>
+{% for question, user_answer, correct_answer in review_data %}
+<div class="question-card">
+    <div class="question-text">{{ loop.index }}. {{ question.question }}</div>
+    <div class="options">
+        {% for option in question.options %}
+        <div class="option {% if loop.index0 == correct_answer %}correct-answer{% elif loop.index0 == user_answer and loop.index0 != correct_answer %}wrong-answer{% endif %}">
+        
+            {% if loop.index0 == correct_answer %}✅{% elif loop.index0 == user_answer and loop.index0 != correct_answer %}❌{% endif %}
+            {{ option }}
+        </div>
+        {% endfor %}
+    </div>
+    
+    {% if question.explanation %}
+    <div class="explanation">
+        <strong>Explanation:</strong> {{ question.explanation }}
+    </div>
+    {% endif %}
+</div>
+{% endfor %}
+
+<div class="button-group">
+    <a href="{{ url_for('start_quiz', category=category) }}" class="btn btn-primary">Try Again</a>
+    <a href="{{ url_for('home') }}" class="btn btn-secondary">Back to Home</a>
+</div>
+{% endblock %}

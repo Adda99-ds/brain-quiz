@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Quiz Application - Home{% endblock %}
+
+{% block content %}
+<h1>Brain Quiz Application</h1>
+<p style="font-size: 1.2em; color: brown; margin-bottom: 30px;">
+    Test your knowledge with our interactive quizzes!
+</p>
+
+<div class="quiz-selector">
+    <h2>Choose a Quiz Category:</h2>
+    <a href="{{ url_for('start_quiz', category='python') }}" class="quiz-btn">
+        Python Programming
+    </a>
+    <a href="{{ url_for('start_quiz', category='general') }}" class="quiz-btn">
+        World General Knowledge
+    </a>
+</div>
+
+{% if session.get('last_score') %}
+<div class="alert alert-success">
+    <strong>Last Quiz Result:</strong> {{ session.last_score }}% 
+    ({{ session.last_correct }}/{{ session.last_total }} correct)
+</div>
+{% endif %}
+{% endblock %}

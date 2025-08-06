@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}{{ category.title() }} Quiz{% endblock %}
+
+{% block content %}
+<h1>{{ category.title() }} Quiz</h1>
+<div class="progress">
+    <div class="progress-bar" style="width: 50%"></div>
+</div>
+
+<p><strong>Question {{ current_question + 1 }} of {{ total_questions }}</strong></p>
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-danger">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<form method="POST">
+    <div class="question-card">
+        <div class="question-text">{{ question.question }}</div>
+        <div class="options">
+            {% for option in question.options %}
+            <label class="option">
+                <input type="radio" name="answer" value="{{ loop.index0 }}" required>
+                <span class="option-text">{{ option }}</span>
+            </label>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <div class="button-group">
+        <a href="{{ url_for('home') }}" class="btn btn-secondary">
+            <span class="arrow-left"></span>
+            Back to Home
+        </a>
+        
+        <button type="submit" class="btn btn-primary">
+            {% if current_question < total_questions - 1 %}
+                Next Question
+            {% else %}
+                Finish Quiz
+            {% endif %}
+            <span class="arrow-right"></span>
+        </button>
+    </div>
+</form>
+{% endblock %}
